@@ -1,0 +1,77 @@
+frameworkVersion: '2'
+org: technica
+app: platform
+service: platform-chats
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: ${opt:stage, 'dev'}
+  timeout: 15
+  deploymentBucket:
+    name: platform-chats-${self:provider.stage}-layers-bucket
+  tags:
+    acl: hacker # default ACL is hacker, will be overrided if needed
+  environment:
+    SENTRY_DSN: ${file(./config.json):${self:provider.stage}.SENTRY_DSN}
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': platform-${self:provider.stage}-apigw-restApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': platform-${self:provider.stage}-apigw-rootResourceId
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*"
+    - Effect: "Allow"
+      Action:
+        - secretsmanager:DescribeSecret
+        - secretsmanager:GetSecretValue
+      Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+functions:
+  # REMOVE THIS WHEN WE ADD RELEVANT ROUTES
+  remove_me:
+    handler: handler.remove_me
+    description: Placeholder lambda that should be deleted
+    events:
+      - http:
+          path: remove
+          method: get
+          cors: true
+
+# resources:
+#   Resources:
+    # REMOVE THIS WHEN WE ADD RELEVANT TABLES
+    # adminTable:
+    #   Type: AWS::DynamoDB::Table
+    #   Properties:
+    #     TableName: ${file(./config.json):${self:provider.stage}.ADMIN_TABLE}
+    #     AttributeDefinitions:
+    #       - AttributeName: id
+    #         AttributeType: S
+    #     KeySchema:
+    #       - AttributeName: id
+    #         KeyType: HASH
+    #     BillingMode: PAY_PER_REQUEST
+    
+plugins:
+  - serverless-sentry
+  - serverless-jest-plugin
+  - serverless-layers
+
+custom:
+  sentry:
+    dsn: ${file(./config.json):${self:provider.stage}.SENTRY_DSN}
+  # see https://github.com/nordcloud/serverless-jest-plugin
+  jest:
+    collectCoverage: true
+  serverless-layers:
+    dependenciesPath: ./package.json

@@ -1,3 +1,8 @@
+2021 Technica Fellowship
+I worked with a group of people to create the hackathon submission page and the gallery details. 
+I worked on the front-end stuff.
+
+
 # Hackathon-Platform
 The Technica platform is an open-source and easy to use online platform for hackathons to use, built with the COVID-19 pandemic in mind.
 

@@ -1,39 +1,60 @@
-# frontend
+# Hackathon-Platform
+The Technica platform is an open-source and easy to use online platform for hackathons to use, built with the COVID-19 pandemic in mind.
 
-## Project setup
-```
-npm install
-```
+## ✅&nbsp; Requirements
+Exact installation details are in the next section, but the whole platform uses Node.js.
+To use the platform for your hackathon, you'll need an AWS account.
 
-### Compiles and hot-reloads for development
-```
+The platform's backend uses AWS Lambda and DynamoDB, with the deployment being handled by Serverless.
+
+The platform's frontend uses Vue.js, and is deployed as a static site onto AWS S3. CDN hosting is handled by AWS CloudFront.
+
+## 🚀&nbsp; Installation
+
+#### Frontend
+To run the frontend on your local machine:
+1. In the `frontend` directory of this repo, run the following: `npm i`
+2. Run `npm run serve` to build and locally host the frontend web app 
+
+```shell
+cd frontend
+npm i
 npm run serve
 ```
 
-### Compiles and minifies for production
+#### Backend
+Each folder in `backend` contains a "service" of the platform's backend.
+To develop or use any given service, you'll need to be in the service's folder. (i.e. `backend/teams` or `backend/users`)
+
+First, set your AWS credentials in your terminal for serverless to use:
+> NOTE: Please be very careful with these keys - treat them like your social security number. Never commit them publicly to Github or share with anyone else.
+
+For Linux/OSX:
+```shell
+export AWS_ACCESS_KEY_ID=<your-key-here>
+export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
 ```
-npm run build
+For Windows:
+```
+set AWS_ACCESS_KEY_ID=<your-key-here>
+set AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
 ```
 
-### Compile, minify for production, and deploy
-```
-npm run deploy
-```
+Next, install the service's dependencies with `npm i`.
 
-### Run your tests
-```
-npm run test
-```
+You're good to go! Here are some useful commands:
 
-### Lints and fixes files
-```
-npm run lint
-```
+| I want to                 | command                            |
+|---------------------------|------------------------------------|
+| Deploy the service to AWS |`sls deploy [-s <STAGE>]`           |
+| Test the service          |`sls invoke test`                   |
+| Invoke the service        |`sls invoke -f <FUNCTION> -d <data>`|
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+This list is probably not exhaustive, so [Serverless' documentation](https://www.serverless.com/framework/docs/) should come in handy.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 📫&nbsp; Have a question? Want to chat? Ran into a problem?
+The project is *currently under development* and open-source support is not currently a top priority (it will be once the platform has been finished).
+However, feel free to contact tech@gotechnica.org with anything!
+
+## 📘&nbsp; License
+[MIT © Technica](https://github.com/gotechnica/platform-2020/blob/master/LICENSE)
